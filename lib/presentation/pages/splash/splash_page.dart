@@ -14,11 +14,24 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _motion;
+
   @override
   void initState() {
     super.initState();
+    _motion = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3200),
+    )..repeat(reverse: true);
     context.read<AuthBloc>().add(AuthCheckRequested());
+  }
+
+  @override
+  void dispose() {
+    _motion.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,35 +50,45 @@ class _SplashPageState extends State<SplashPage> {
         }
       },
       child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
-          child: SafeArea(
-            child: Stack(
+        body: AnimatedBuilder(
+          animation: _motion,
+          builder: (context, _) {
+            final drift = _motion.value;
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(-1 + drift * 0.25, -1),
+                  end: Alignment(1 - drift * 0.2, 1),
+                  colors: const [
+                    Color(0xFFFF9CCB),
+                    AppColors.primary,
+                    Color(0xFF9B165F),
+                  ],
+                ),
+              ),
+              child: SafeArea(
+                child: Stack(
               children: [
                 // Decorative circles
                 Positioned(
-                  top: -120,
-                  right: -90,
-                  child: Container(
-                    width: 320,
-                    height: 320,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.08),
-                    ),
-                  ),
+                  top: -120 + (drift * 22),
+                  right: -92 + (drift * 18),
+                  child: const _GlowCircle(size: 320, alpha: 0.12),
                 ),
                 Positioned(
-                  bottom: 120,
-                  left: -100,
-                  child: Container(
-                    width: 220,
-                    height: 220,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.07),
-                    ),
-                  ),
+                  bottom: 116 - (drift * 24),
+                  left: -96 + (drift * 18),
+                  child: const _GlowCircle(size: 220, alpha: 0.09),
+                ),
+                Positioned(
+                  top: 130 + (drift * 18),
+                  left: 28 + (drift * 10),
+                  child: const _SparkleDot(size: 12),
+                ),
+                Positioned(
+                  right: 38,
+                  bottom: 220 - (drift * 18),
+                  child: const _SparkleDot(size: 8),
                 ),
                 // Content
                 Padding(
@@ -73,30 +96,19 @@ class _SplashPageState extends State<SplashPage> {
                   child: Column(
                     children: [
                       const Spacer(),
-                      const AppLogo(size: 92, light: true),
+                      const AppLogo(size: 92, light: true, animated: true),
                       const SizedBox(height: 26),
                       const Text(
-                        'Dompet Kampus',
+                        'Dompet Stardew',
                         style: TextStyle(
                           fontFamily: 'PlusJakartaSans',
                           fontSize: 30,
                           fontWeight: FontWeight.w800,
                           color: Colors.white,
-                          letterSpacing: -0.5,
+                          letterSpacing: 0,
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      const Text(
-                        'GLOBAL',
-                        style: TextStyle(
-                          fontFamily: 'PlusJakartaSans',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 3,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
                       const Text(
                         'Bayar, transfer, dan kelola uang kuliah\ndalam satu aplikasi yang aman.',
                         textAlign: TextAlign.center,
@@ -128,9 +140,55 @@ class _SplashPageState extends State<SplashPage> {
                   ),
                 ),
               ],
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         ),
+      ),
+    );
+  }
+}
+
+class _GlowCircle extends StatelessWidget {
+  final double size;
+  final double alpha;
+
+  const _GlowCircle({required this.size, required this.alpha});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: alpha),
+      ),
+    );
+  }
+}
+
+class _SparkleDot extends StatelessWidget {
+  final double size;
+
+  const _SparkleDot({required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: 0.74),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withValues(alpha: 0.42),
+            blurRadius: 18,
+            spreadRadius: 3,
+          ),
+        ],
       ),
     );
   }

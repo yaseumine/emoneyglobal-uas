@@ -49,7 +49,7 @@ class OtpRemoteDatasourceImpl implements OtpRemoteDatasource {
     return TotpSetupEntity(
       secret: data['secret'] as String,
       qrCode: data['qr_code'] as String,
-      issuer: data['issuer'] as String? ?? 'DKG',
+      issuer: data['issuer'] as String? ?? 'Dompet Stardew',
       account: data['account'] as String? ?? '',
     );
   }

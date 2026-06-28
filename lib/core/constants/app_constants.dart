@@ -1,5 +1,5 @@
 class AppConstants {
-  static const String appName = 'Dompet Kampus Global';
+  static const String appName = 'Dompet Stardew';
   static const String appVersion = '1.0.0';
 
   // API
@@ -7,7 +7,7 @@ class AppConstants {
   // flutter run --dart-define=API_BASE_URL=http://192.168.x.x:8080
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://192.168.10.143:8080',
+    defaultValue: 'http://192.168.0.118:8080',
   );
   static const String apiVersion = '/v1';
   static const int connectTimeout = 30;

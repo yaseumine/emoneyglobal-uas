@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _showPw = false;
   bool _gLoading = false;
 
-  bool get _valid => _email.contains('@') && _pw.length >= 4;
+  bool get _valid => _email.trim().contains('@') && _pw.length >= 4;
 
   Future<void> _loginWithGoogle() async {
     setState(() => _gLoading = true);
@@ -78,9 +78,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _loginWithEmail() async {
     try {
+      final email = _email.trim();
       final userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _email,
+        email: email,
         password: _pw,
       );
       final user = userCredential.user;
@@ -100,9 +101,18 @@ class _LoginPageState extends State<LoginPage> {
         context.read<AuthBloc>().add(AuthLoginWithFirebase(idToken));
       }
     } on FirebaseAuthException catch (e) {
+      debugPrint('[Auth] Email login ERROR: ${e.code} - ${e.message}');
+      final message = switch (e.code) {
+        'invalid-credential' || 'wrong-password' => 'Email atau kata sandi salah.',
+        'user-not-found' => 'Akun dengan email ini tidak ditemukan.',
+        'invalid-email' => 'Format email tidak valid.',
+        'user-disabled' => 'Akun ini sedang dinonaktifkan.',
+        'too-many-requests' => 'Terlalu banyak percobaan login. Coba lagi nanti.',
+        _ => e.message ?? 'Login gagal.',
+      };
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Login gagal.')),
+          SnackBar(content: Text(message)),
         );
       }
     }

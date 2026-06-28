@@ -18,15 +18,32 @@ class FeatureIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.tone(tone);
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: colors[0],
-        borderRadius: BorderRadius.circular(size * 0.29),
-      ),
-      child: Center(
-        child: Icon(icon, color: colors[1], size: iconSize),
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.86, end: 1),
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) {
+        return Transform.scale(scale: value, child: child);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: colors[0],
+          borderRadius: BorderRadius.circular(size * 0.29),
+          boxShadow: [
+            BoxShadow(
+              color: colors[1].withValues(alpha: 0.16),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Icon(icon, color: colors[1], size: iconSize),
+        ),
       ),
     );
   }

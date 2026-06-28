@@ -245,7 +245,7 @@ class _PinPageState extends State<PinPage> {
         'lines': [
           ['Jumlah', CurrencyFormatter.format(result.amount)],
           ['Saldo setelah', CurrencyFormatter.format(result.balanceAfter)],
-          ['Ref', 'DKG${result.transactionId}'],
+          ['Ref', 'DS${result.transactionId}'],
         ],
       });
     } else if (state is PaymentTopupSuccess) {

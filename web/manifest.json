@@ -1,11 +1,11 @@
 {
-    "name": "dompet_global",
-    "short_name": "dompet_global",
+    "name": "Dompet Stardew",
+    "short_name": "Stardew",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFF6FA",
+    "theme_color": "#E83E8C",
+    "description": "Dompet Stardew untuk bayar, transfer, dan kelola uang kuliah.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

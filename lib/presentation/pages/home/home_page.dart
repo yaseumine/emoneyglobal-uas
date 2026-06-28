@@ -18,14 +18,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   bool _hideBalance = false;
+  late final AnimationController _motion;
 
   @override
   void initState() {
     super.initState();
+    _motion = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3600),
+    )..repeat(reverse: true);
     context.read<AccountBloc>().add(AccountLoadRequested());
     context.read<AuthBloc>().add(AuthCheckRequested());
+  }
+
+  @override
+  void dispose() {
+    _motion.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,6 +66,7 @@ class _HomePageState extends State<HomePage> {
                       // Gradient header
                       Container(
                         width: double.infinity,
+                        clipBehavior: Clip.antiAlias,
                         decoration: const BoxDecoration(
                           gradient: AppColors.primaryGradient,
                           borderRadius: BorderRadius.only(
@@ -64,62 +76,97 @@ class _HomePageState extends State<HomePage> {
                         ),
                         padding: EdgeInsets.fromLTRB(
                             20, MediaQuery.of(context).padding.top + 12, 20, 94),
-                        child: Row(
-                          children: [
-                            AppAvatar(
-                                name: fullName,
-                                size: 44,
-                                bg: Colors.white.withValues(alpha: 0.25)),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Selamat siang,',
-                                      style: TextStyle(
-                                        fontFamily: 'PlusJakartaSans',
-                                        fontSize: 13,
-                                        color: Colors.white70,
-                                      )),
-                                  Text('$firstName ',
-                                      style: const TextStyle(
-                                        fontFamily: 'PlusJakartaSans',
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                        letterSpacing: -0.2,
-                                      )),
-                                ],
-                              ),
-                            ),
-                            Stack(
+                        child: AnimatedBuilder(
+                          animation: _motion,
+                          builder: (context, _) {
+                            final drift = _motion.value;
+                            return Stack(
+                              clipBehavior: Clip.none,
                               children: [
-                                Container(
-                                  width: 42,
-                                  height: 42,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.18),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: const Icon(Icons.notifications_outlined,
-                                      size: 21, color: Colors.white),
-                                ),
                                 Positioned(
-                                  top: 10,
-                                  right: 11,
+                                  right: -42 + (drift * 24),
+                                  top: -70 + (drift * 18),
                                   child: Container(
-                                    width: 8,
-                                    height: 8,
+                                    width: 150,
+                                    height: 150,
                                     decoration: BoxDecoration(
-                                      color: AppColors.amber,
                                       shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white, width: 2),
+                                      color: Colors.white.withValues(alpha: 0.1),
                                     ),
                                   ),
                                 ),
+                                Positioned(
+                                  left: 96 + (drift * 18),
+                                  bottom: -72,
+                                  child: Container(
+                                    width: 92,
+                                    height: 92,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withValues(alpha: 0.08),
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    AppAvatar(
+                                        name: fullName,
+                                        size: 44,
+                                        bg: Colors.white.withValues(alpha: 0.25)),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Selamat siang,',
+                                              style: TextStyle(
+                                                fontFamily: 'PlusJakartaSans',
+                                                fontSize: 13,
+                                                color: Colors.white70,
+                                              )),
+                                          Text('$firstName ',
+                                              style: const TextStyle(
+                                                fontFamily: 'PlusJakartaSans',
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.white,
+                                                letterSpacing: 0,
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          width: 42,
+                                          height: 42,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.18),
+                                            borderRadius: BorderRadius.circular(14),
+                                          ),
+                                          child: const Icon(Icons.notifications_outlined,
+                                              size: 21, color: Colors.white),
+                                        ),
+                                        Positioned(
+                                          top: 10,
+                                          right: 11,
+                                          child: Container(
+                                            width: 8,
+                                            height: 8,
+                                            decoration: BoxDecoration(
+                                              color: AppColors.amber,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: Colors.white, width: 2),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ],
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                       // Balance Card (overlaps the header's bottom edge)
@@ -185,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   const AppLogo(size: 26),
                   const SizedBox(width: 7),
-                  const Text('Saldo DKG',
+                  const Text('Saldo Stardew',
                       style: TextStyle(
                         fontFamily: 'PlusJakartaSans',
                         fontSize: 13,
@@ -303,7 +350,7 @@ class _HomePageState extends State<HomePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
-                    Text('Poin Kampus',
+                    Text('Poin Stardew',
                         style: TextStyle(
                             fontFamily: 'PlusJakartaSans',
                             fontSize: 11.5,
@@ -460,7 +507,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.white,
                           )),
                       SizedBox(height: 2),
-                      Text('Simulasi checkout e-commerce → bayar via DKG',
+                      Text('Simulasi checkout e-commerce via Dompet Stardew',
                           style: TextStyle(
                             fontFamily: 'PlusJakartaSans',
                             fontSize: 12.5,

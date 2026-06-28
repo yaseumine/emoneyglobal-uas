@@ -17,12 +17,12 @@ class AppAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = [
-      const Color(0xFF0B63E5),
-      const Color(0xFF16A571),
-      const Color(0xFF7A5AF8),
-      const Color(0xFFF5A623),
-      const Color(0xFFE5484D),
-      const Color(0xFF0EA5E9),
+      const Color(0xFFE83E8C),
+      const Color(0xFFFF7AB6),
+      const Color(0xFF1DAF86),
+      const Color(0xFFFFA23F),
+      const Color(0xFF8B5CF6),
+      const Color(0xFFE9365E),
     ];
     final auto = palette[(name.isNotEmpty ? name.codeUnitAt(0) : 0) % palette.length];
     final initials = name
