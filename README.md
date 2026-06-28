@@ -64,19 +64,6 @@ lib/
 
 Bagian ini disediakan untuk lampiran screenshot aplikasi.
 
-| No | Halaman | Screenshot |
-| --- | --- | --- |
-| 1 | Splash Screen |  |
-| 2 | Login |  |
-| 3 | Register |  |
-| 4 | Home |  |
-| 5 | Top Up |  |
-| 6 | Transfer |  |
-| 7 | Payment |  |
-| 8 | History |  |
-| 9 | Account |  |
-| 10 | Deeplink dari Catalog |  |
-
 ## Link Video YouTube
 
 Link demo aplikasi:
