@@ -1,5 +1,5 @@
 name: dompet_kampus_global
-description: "Aplikasi e-money Dompet Kampus Global — bayar, transfer, dan kelola uang kuliah."
+description: "Aplikasi e-money Dompet Stardew untuk bayar, transfer, dan kelola uang kuliah."
 publish_to: "none"
 version: 1.0.0+1
 
@@ -54,3 +54,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/uang.jpg
